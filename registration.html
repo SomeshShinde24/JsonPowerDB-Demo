@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login2Xplore Project</title>
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+        <style type="text/css">
+		th 
+		{
+			color: #000;
+			font-size: 28px;
+			font-weight: bold;
+			text-align: left;
+		}
+		td	
+		{
+			color: #000;
+		}
+		body
+   	 {
+		background-color:#D3D3D3;
+		color:white;
+  		font-family:'Times New Roman', Times, serif;
+	}
+	</style>
+    </head>
+<body>
+
+    <form id="myForm"  method="post">
+<table width="700" border="0" align="center" cellpadding="0" cellspacing="5">
+  <tr>
+    <th width="25%" height="60">&nbsp;</th>
+    <th><p>EMPLOYEE REGISTRATION</p></th>
+    <th width="10%">&nbsp;</th>
+  </tr>
+  <tr>
+    <td><strong>Name:</strong></td>
+    <td><input id="name" name="name" type="text" size="35" required/></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><strong>Date of Birth:</strong></td>
+    <td><input id="Date of Birth" type="date" type="number" size="35" required/></td>
+    <td>&nbsp;</td>
+  </tr>
+ 
+  <tr>
+    <td><strong>Email:</strong></td>
+    <td><input id="email" name="email" type="email" size="50" required/></td>
+    <td>&nbsp;</td>
+  </tr>
+  
+
+  <tr>
+    <td><strong>Department:</strong></td> 
+    <td><select   id="dept" name="dept" >
+	<option>Select..</option>
+        <option value="Dev">DEVLOPMENT</option>
+        <option value="Testing">TESTING</option>
+        <option value="Sales">SALES</option>
+        <option value="Production">PRODUCTION</option>
+        <option value="Finance">FINANCE</option>
+        </select>
+    </td>
+  <tr>
+    <td><strong>Mobile Number:</strong></td>
+    <td><input id="mobileno" name="mobileno" type="tel" size="35"  pattern="[0-9]{10}"/></td>
+    <td>&nbsp;</td>
+  </tr>
+
+</table>
+<center>
+<input type="button" value="Register" onclick="registerCandidate();"/>
+</center>
+</form>
+</body>
+
+<script>
+     
+        function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
+
+   
+        function validateAndGetFormData() {
+            
+            var name = document.getElementById("name").value;
+            var DateofBirth = document.getElementById("Date of Birth").value;     
+            var email = document.getElementById("email").value;
+            var dept = document.getElementById("dept").value;
+            var mobileno = document.getElementById("mobileno").value;
+            
+            var jsonStrObj = {
+                StudentName: name,
+                DateofBirth: DateofBirth,
+                Email: email,
+                Department: dept,
+                MobileNo: mobileno,
+            };
+            return JSON.stringify(jsonStrObj);
+        }
+        
+
+        function registerCandidate() {
+
+            var jsonStr = validateAndGetFormData();
+            if (jsonStr === "") {
+                return;
+            }
+            var putReqStr = createPUTRequest("90938899|-31949290346091573|90941421",jsonStr, "EMPLOYEEDB", "EMPLOYEE-REL");
+            alert(putReqStr);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(putReqStr,
+                    "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            alert( "VALUES INSERTED "+ JSON.stringify(resultObj));
+            document.getElementById("myForm").reset();
+}
+
+        
+    </script>
+
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login2Xplore Project</title>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+    <style type="text/css">
+        body {
+            background-color: #D3D3D3;
+            font-family: verdana;
+            color: #000;
+            font-size: 28px;
+
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h1>UPDATE DETAILS</h1>
+    </center>
+
+    <center>
+        <input id="recordid" maxlength="50" placeholder="ID number" name="recordid" type="text" /><br><br>
+        <p>Update your Mobile number</p>
+        <input id="mobileno" name="mobileno" type="tel" size="35" pattern="[0-9]{10}" /><br><br>
+        <input type="button" value="UPDATE" onclick="updateData();" />
+        <p>Update your Email-Id</p>
+        <input id="email" name="email" type="email" size="50" required /><br><br>
+        <input type="button" value="UPDATE" onclick="updateData();" />
+    </center>
+
+    <p id="show"></p>
+
+    <script>
+        function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
+        function resetForm() {
+            $("#recordid").val("")
+            $("#mobileno").val("")
+            $("#email").val("");
+            $("#recordid").focus();
+        }
+
+        function updateData() {
+            var token = "90938899|-31949290346091573|90941421";
+            var dbname = "EMPLOYEEDB";
+            var relationName = "EMPLOYEE-REL";
+            var recordid = document.getElementById("recordid").value;
+            var mobileno = document.getElementById("mobileno").value;
+            var email = document.getElementById("email").value;
+
+            var jsonStr = {
+                MobileNo: mobileno
+            };
+            var jsonStr = {
+                Email: email
+            };
+            var reqString = createUPDATERecordRequest(token, JSON.stringify(jsonStr), dbname, relationName, recordid);
+            alert(reqString);
+            jQuery.ajaxSetup({ async: false });
+            var resultObj = executeCommand(reqString,
+                "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({ async: true });
+            alert(JSON.stringify(resultObj));
+            resetForm();
+
+        }
+    </script>
+
+</body>
+
+</html>

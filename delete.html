@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <title>Login2Xplore Project</title>
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+        <style type="text/css">
+		
+		body
+   	    {
+		background-color:#D3D3D3;
+  		font-family:verdana;
+                color: #000;
+		font-size: 24px;
+            
+            text-align: center;
+	}
+	</style>
+    </head>
+    
+    
+    
+    <body>    
+    <center><h1>Delete Data</h1></center>
+    <center>
+        <input id="recordid" maxlength="50" placeholder="ID number" name="recordid" type="text"/><br><br>
+        <input type="button" value=" DELETE DATA" onclick="deleteData();"/>
+    </center>
+ 
+    
+    <script>
+        
+        function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
+
+        function deleteData(){
+            var token = "90938899|-31949290346091573|90941421";
+            var dbname = "EMPLOYEEDB";
+            var relationName = "EMPLOYEE-REL";
+            var recordid = document.getElementById("recordid").value;
+            var jsonStr = {};
+
+            var reqString = createREMOVERecordRequest(token, dbname, relationName, recordid );
+            alert(reqString);
+            
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,
+                    "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            alert( "VALUE DELETED"+ JSON.stringify(resultObj));
+            
+        }
+    </script>
+    
+    </body>
+</html>
